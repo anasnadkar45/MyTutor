@@ -98,3 +98,14 @@ export async function onboardUser(prevState: any, formData: FormData) {
     }
 }
 
+// ----------------------------------------------------------------
+
+export async function getUserData(){
+    const session = await requireUser();
+    const data = await prisma.user.findUnique({
+        where:{
+            id:session.user?.id
+        }
+    })
+    return data
+}

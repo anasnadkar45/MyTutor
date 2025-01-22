@@ -98,7 +98,11 @@ export const Onboarding = () => {
     console.log("State updated:", state)
     if (state?.status === "success") {
       toast.success(state.message)
-      redirect('/dashboard')
+      if (accountName === "Tutor") {
+        redirect('/tutor/dashboard')
+      }else {
+        redirect('/learner/dashboard')
+      }
     } else if (state?.status === "error") {
       toast.error(state?.message)
     }

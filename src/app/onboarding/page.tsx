@@ -1,23 +1,25 @@
 import React from 'react'
-import {Onboarding} from '../component/onboarding/Onboarding'
+import { Onboarding } from '../components/onboarding/Onboarding'
 import { requireUser } from '../utils/hooks'
 import prisma from '../utils/db'
 import { redirect } from 'next/navigation'
 
-const getUserData = async(userId: string) =>{
+const getUserData = async (userId: string) => {
   const data = await prisma.user.findUnique({
-    where:{
+    where: {
       id: userId,
     }
   })
   return data
 }
-const page = async() => {
+const page = async () => {
   const session = await requireUser()
-  const user = await getUserData(session.user?.id as string)
+  const userData = await getUserData(session.user?.id as string)
 
-  if(user?.accountName !== null){
-    redirect('/dashboard');
+  if (userData?.accountName === "Learner") {
+    redirect('/learner/dashboard')
+  } else if (userData?.accountName === "Tutor") {
+    redirect('/tutor/dashboard')
   }
   return (
     <div>
