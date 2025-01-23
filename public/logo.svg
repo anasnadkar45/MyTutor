@@ -49,7 +49,7 @@
 	</clipPath>
 	<g filter="url(#a)">
 		<g clip-path="url(#f)">
-			<rect fill="#0A0D12" height="48" rx="12" width="48" />
+			<rect fill="#21c45d" height="48" rx="12" width="48" />
 			<path d="m0 0h48v48h-48z" fill="url(#c)" />
 			<g clip-rule="evenodd" fill="url(#d)" fill-rule="evenodd" filter="url(#b)">
 				<path d="m22.875 20.25v-11.25h2.25v11.25z" />

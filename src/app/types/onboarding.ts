@@ -8,3 +8,4 @@ export interface OnboardingState {
   workType: WorkType
   level: LevelType
 }
+

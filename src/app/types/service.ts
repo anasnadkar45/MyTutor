@@ -1,0 +1,53 @@
+import { ServiceType, AccountType, BookingStatus } from "@prisma/client"
+
+export interface ServiceProps {
+    id: string
+    serviceType: ServiceType
+    title: string
+    description: string
+    price: number
+    duration: number
+    availableSlots: AvailableSlotType[]
+    createdAt: Date
+    updatedAt: Date
+    bookings: BookingType[]
+    userId?: string
+    user?: UserType
+}
+
+export interface AvailableSlotType {
+    id: string
+    startTime: Date
+    endTime: Date
+    isBooked: boolean
+    bookings: BookingType[]
+    serviceId?: string
+    service?: ServiceProps
+}
+
+export interface UserType {
+    id: string
+    name?: string
+    email: string
+    emailVerified?: Date
+    image?: string
+    accountName?: AccountType
+    onboardingComplete: boolean
+    createdAt: Date
+    updatedAt: Date
+    services: ServiceProps[]
+    bookings: BookingType[]
+}
+
+export interface BookingType {
+    id: string
+    status: BookingStatus
+    createdAt: Date
+    updatedAt: Date
+    userId?: string
+    user?: UserType
+    serviceId?: string
+    service?: ServiceProps
+    availableSlotId?: string
+    availableSlot?: AvailableSlotType
+}

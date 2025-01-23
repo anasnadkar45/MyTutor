@@ -1,7 +1,7 @@
 "use server"
 import { requireUser } from "./utils/hooks";
 import { z } from "zod";
-import { AccountType } from "@prisma/client";
+import { AccountType, ServiceType } from "@prisma/client";
 import prisma from "./utils/db";
 import { redirect } from "next/navigation";
 
@@ -88,7 +88,7 @@ export async function onboardUser(prevState: any, formData: FormData) {
                 message: "You have been onboarded successfully.",
             };
             return state;
-            
+
         } catch (err) {
             return {
                 status: "error",
@@ -100,12 +100,89 @@ export async function onboardUser(prevState: any, formData: FormData) {
 
 // ----------------------------------------------------------------
 
-export async function getUserData(){
+export async function getUserData() {
     const session = await requireUser();
     const data = await prisma.user.findUnique({
-        where:{
-            id:session.user?.id
+        where: {
+            id: session.user?.id
         }
     })
     return data
+}
+
+// ----------------------------------------------------------------
+const serviceSchema = z.object({
+    serviceType: z
+        .string()
+        .min(1, { message: "Service Category is required" }),
+    title: z
+        .string()
+        .min(3, { message: "Title is required" }),
+    description: z
+        .string()
+        .min(3, { message: "Short description is required" }),
+    price: z
+        .number(),
+    duration: z
+        .number(),
+})
+
+export async function createService(prevState: any, formData: FormData) {
+    const user = await getUserData();
+    if (!user?.id) {
+        return {
+            status: "error",
+            message: "User not found. Please log in to add a new project."
+        };
+    }
+
+    const validateFields = serviceSchema.safeParse({
+        serviceType: formData.get('serviceType'),
+        title: formData.get('title'),
+        description: formData.get('description'),
+        price: Number(formData.get('price')),
+        duration: Number(formData.get('duration')),
+    });
+
+    if (!validateFields.success) {
+        return {
+            status: "error",
+            message: "Validation failed.",
+            errors: validateFields.error.flatten().fieldErrors,
+        };
+    }
+
+    if (user.accountName === "Tutor") {
+        try {
+            const data = await prisma.service.create({
+                data: {
+                    serviceType: validateFields.data.serviceType as ServiceType,
+                    title: validateFields.data.title,
+                    description: validateFields.data.description,
+                    price: validateFields.data.price,
+                    duration: validateFields.data.duration,
+                    userId: user.id
+                }
+            })
+
+            if (data) {
+                return {
+                    status: "success",
+                    message: "Your service have been created successfully."
+                };
+            }
+
+            const state: State = {
+                status: "success",
+                message: "Your service have been created successfully.",
+            };
+            return state;
+            
+        } catch (e) {
+            return {
+                status: "error",
+                message: "An error occurred while creating the service. Please try again later."
+            };
+        }
+    }
 }

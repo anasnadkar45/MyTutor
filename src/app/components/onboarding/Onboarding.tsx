@@ -126,7 +126,7 @@ export const Onboarding = () => {
               {userTypeOptions.map((option) => (
                 <Card
                   key={option.id}
-                  className={`relative cursor-pointer p-6 transition-all hover:bg-gray-50 ${accountName === option.id ? "border-green-500 bg-gray-50" : ""
+                  className={`relative cursor-pointer p-6 transition-all hover:bg-secondary ${accountName === option.id ? "border-green-500 bg-secondary" : "bg-card"
                     }`}
                   onClick={() => setAccountName(option.id)}
                 >
@@ -157,7 +157,7 @@ export const Onboarding = () => {
               {subjectOptions.map((option) => (
                 <Card
                   key={option.id}
-                  className={`relative cursor-pointer p-6 transition-all hover:bg-gray-50 ${subjectIntrested === option.id ? "border-green-500 bg-gray-50" : ""
+                  className={`relative cursor-pointer p-6 transition-all hover:bg-secondary ${subjectIntrested === option.id ? "border-green-500 bg-secondary" : "bg-card"
                     }`}
                   onClick={() => setSubjectInterested(option.id)}
                 >
@@ -191,7 +191,7 @@ export const Onboarding = () => {
               {levelOptions.map((option) => (
                 <Card
                   key={option.id}
-                  className={`relative cursor-pointer p-6 transition-all hover:bg-gray-50 ${experience === option.id ? "border-green-500 bg-gray-50" : ""
+                  className={`relative cursor-pointer p-6 transition-all hover:bg-secondary ${experience === option.id ? "border-green-500 bg-secondary" : "bg-card"
                     }`}
                   onClick={() => setExperience(option.id)}
                 >
@@ -201,7 +201,7 @@ export const Onboarding = () => {
                     </div>
                   )}
                   <div
-                    className={`mb-2 flex h-12 w-12 items-center justify-center rounded-full ${experience === option.id ? "bg-green-500" : "bg-gray-100"
+                    className={`mb-2 flex h-12 w-fit items-center justify-center rounded-md p-2 ${experience === option.id ? "bg-green-500" : "bg-gray-100"
                       }`}
                   >
                     <div className={experience === option.id ? "text-white" : "text-gray-500"}>{option.title}</div>
