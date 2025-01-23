@@ -177,11 +177,75 @@ export async function createService(prevState: any, formData: FormData) {
                 message: "Your service have been created successfully.",
             };
             return state;
-            
+
         } catch (e) {
             return {
                 status: "error",
                 message: "An error occurred while creating the service. Please try again later."
+            };
+        }
+    }
+}
+
+// ----------------------------------------------------------------
+
+const timeSlotSchema = z.object({
+    startTime: z
+        .date(),
+    endTime: z
+        .date(),
+})
+
+export async function createTimeSlot(prevState: any, formData: FormData) {
+    const user = await getUserData();
+    if (!user?.id) {
+        return {
+            status: "error",
+            message: "User not found. Please log in to add a new project."
+        };
+    }
+
+    const validateFields = timeSlotSchema.safeParse({
+        startTime: formData.get('startTime'),
+        endTime: formData.get('endTime'),
+    });
+
+    if (!validateFields.success) {
+        return {
+            status: "error",
+            message: "Validation failed.",
+            errors: validateFields.error.flatten().fieldErrors,
+        };
+    }
+
+    const serviceId = formData.get('serviceId') as string;
+    if (user.accountName === "Tutor") {
+        try {
+            const data = await prisma.availableSlot.create({
+                data: {
+                    startTime: validateFields.data.startTime,
+                    endTime: validateFields.data.endTime,
+                    serviceId: serviceId,
+                }
+            })
+
+            if (data) {
+                return {
+                    status: "success",
+                    message: "Your time slot have been created successfully."
+                };
+            }
+
+            const state: State = {
+                status: "success",
+                message: "Your time slot have been created successfully.",
+            };
+            return state;
+
+        } catch (e) {
+            return {
+                status: "error",
+                message: "An error occurred while creating the time slot. Please try again later."
             };
         }
     }
