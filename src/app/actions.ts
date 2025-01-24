@@ -4,6 +4,7 @@ import { z } from "zod";
 import { AccountType, ServiceType } from "@prisma/client";
 import prisma from "./utils/db";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export type State = {
     status: "error" | "success" | undefined;
@@ -190,63 +191,138 @@ export async function createService(prevState: any, formData: FormData) {
 // ----------------------------------------------------------------
 
 const timeSlotSchema = z.object({
-    startTime: z
-        .date(),
-    endTime: z
-        .date(),
+    date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format (YYYY-MM-DD)"),
+    startTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:mm)"),
+    endTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:mm)"),
 })
 
 export async function createTimeSlot(prevState: any, formData: FormData) {
-    const user = await getUserData();
+    const user = await getUserData()
     if (!user?.id) {
         return {
             status: "error",
-            message: "User not found. Please log in to add a new project."
-        };
+            message: "User not found. Please log in to add a new project.",
+        }
     }
 
+    // Get date and time from the form
+    const dateStr = formData.get("date") as string
+    const startTimeStr = formData.get("startTime") as string
+    const endTimeStr = formData.get("endTime") as string
+
+    if (!dateStr || !startTimeStr || !endTimeStr) {
+        return {
+            status: "error",
+            message: "Date, Start Time, and End Time are required.",
+        }
+    }
+
+    // Validate input format
     const validateFields = timeSlotSchema.safeParse({
-        startTime: formData.get('startTime'),
-        endTime: formData.get('endTime'),
-    });
+        date: dateStr,
+        startTime: startTimeStr,
+        endTime: endTimeStr,
+    })
 
     if (!validateFields.success) {
         return {
             status: "error",
             message: "Validation failed.",
             errors: validateFields.error.flatten().fieldErrors,
-        };
+        }
     }
 
-    const serviceId = formData.get('serviceId') as string;
+    // Create Date objects in local time and store them directly
+    const startTime = new Date(`${dateStr}T${startTimeStr}`)
+    const endTime = new Date(`${dateStr}T${endTimeStr}`)
+
+    const serviceId = formData.get("serviceId") as string
     if (user.accountName === "Tutor") {
         try {
             const data = await prisma.availableSlot.create({
                 data: {
-                    startTime: validateFields.data.startTime,
-                    endTime: validateFields.data.endTime,
-                    serviceId: serviceId,
-                }
+                    startTime,
+                    endTime,
+                    serviceId,
+                },
             })
 
             if (data) {
-                return {
-                    status: "success",
-                    message: "Your time slot have been created successfully."
-                };
+                revalidatePath(`/tutor/service/${serviceId}`)
             }
 
             const state: State = {
                 status: "success",
-                message: "Your time slot have been created successfully.",
-            };
-            return state;
-
+                message: "Your time slot has been created successfully.",
+            }
+            return state
         } catch (e) {
             return {
                 status: "error",
-                message: "An error occurred while creating the time slot. Please try again later."
-            };
+                message: "An error occurred while creating the time slot. Please try again later.",
+            }
+        }
+    }
+}
+
+const bookingSchema = z.object({
+    slotId: z.string().min(1, "Time slot is required"),
+    serviceId: z.string().min(1, "Service is required"),
+})
+
+export async function bookTimeSlot(prevState: any, formData: FormData) {
+    const user = await getUserData()
+    if (!user?.id) {
+        return {
+            status: "error",
+            message: "Please log in to book a service.",
+        }
+    }
+
+    const validateFields = bookingSchema.safeParse({
+        slotId: formData.get("slotId"),
+        serviceId: formData.get("serviceId"),
+    })
+
+    if (!validateFields.success) {
+        return {
+            status: "error",
+            message: "Invalid booking data.",
+            errors: validateFields.error.flatten().fieldErrors,
+        }
+    }
+
+    try {
+
+        const booking = await prisma.booking.create({
+            data: {
+                serviceId: validateFields.data.serviceId,
+                availableSlotId: validateFields.data.slotId,
+                userId: user.id,
+            }
+        })
+
+        const updateStatus = await prisma.availableSlot.update({
+            where: {
+                id: validateFields.data.slotId,
+
+            },
+            data: {
+                isBooked: true
+            }
+        })
+
+        if (booking) {
+            revalidatePath(`/learner/discover/${validateFields.data.serviceId}`)
+            return {
+                status: "success",
+                message: "Service booked successfully! Check your bookings for details.",
+            }
+        }
+    } catch (error) {
+        return {
+            status: "error",
+            message: error instanceof Error ? error.message : "Failed to book the service. Please try again.",
         }
     }
 }

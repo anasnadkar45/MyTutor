@@ -1,7 +1,7 @@
+import { CreateAvailableSlot } from '@/app/components/tutor/service/CreateAvailableSlot'
 import prisma from '@/app/utils/db'
 import { Topbar } from '@/components/global/Topbar'
 import { Wrapper } from '@/components/global/Wrapper'
-import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -18,7 +18,6 @@ const getServiceData = async (serviceId: string) => {
     })
     return data;
 }
-
 const page = async ({ params }: { params: { id: string } }) => {
     const service = await getServiceData(params.id);
     console.log(service)
@@ -26,23 +25,15 @@ const page = async ({ params }: { params: { id: string } }) => {
         <div>
             <Topbar className='flex justify-between text-foreground'>
                 <div className='flex items-center gap-6 text-muted-foreground'>
-                    <Link href={'/tutor/service'} className='hover:text-foreground'>
+                    <Link href={`/tutor/service/${params.id}`} className='hover:text-foreground'>
                         <ArrowLeft />
                     </Link>
-                    <h1>{service?.title}</h1>
-                </div>
-                <div className='flex gap-2 items-center'>
-                    <Link href={'/tutor/service'} className='hover:text-foreground'>
-                        <Button>Edit</Button>
-                    </Link>
-                    <Link href={`/tutor/service/${service?.id}/schedule`}>
-                        <Button>Create Schedule</Button>
-                    </Link>
+                    <h1>What schedule are you going to create today</h1>
                 </div>
             </Topbar>
             <Wrapper>
                 <div>
-                    
+                    <CreateAvailableSlot serviceId={service?.id as string} slotsCreated={service?.availableSlots as any} />
                 </div>
             </Wrapper>
         </div>

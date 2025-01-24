@@ -18,9 +18,11 @@ interface iAppProps {
   | null
   | undefined;
   className?: string;
+  onClick?: () => void
+  isSubmitting?: boolean;
 }
 
-export function SubmitButton({ text, variant,className }: iAppProps) {
+export function SubmitButton({ text, variant, className, onClick,isSubmitting }: iAppProps) {
   const { pending } = useFormStatus();
   return (
     <>
@@ -29,7 +31,7 @@ export function SubmitButton({ text, variant,className }: iAppProps) {
           <Loader2 className="size-4 mr-2 animate-spin" /> Please wait...
         </Button>
       ) : (
-        <Button type="submit" className={cn("w-fit", className)} variant={variant}>
+        <Button type="submit" onClick={onClick} disabled={isSubmitting} className={cn("w-fit", className)} variant={variant}>
           {text}
         </Button>
       )}
