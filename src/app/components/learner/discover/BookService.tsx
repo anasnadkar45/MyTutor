@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Clock } from 'lucide-react'
+import { Clock, LoaderCircle } from 'lucide-react'
 import { bookTimeSlot } from '@/app/actions'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
@@ -36,14 +36,13 @@ export const BookService = ({ service }: { service: ServiceProps }) => {
     const handleBooking = async (slotId: string) => {
         try {
             setIsBooking(true)
-            setSelectedSlot(slotId)
-            
+
             const formData = new FormData()
             formData.append('slotId', slotId)
             formData.append('serviceId', service.id)
-            
+
             const response = await bookTimeSlot(null, formData)
-            
+
             if (response?.status === 'success') {
                 toast.success(response.message)
                 router.refresh()
@@ -73,14 +72,14 @@ export const BookService = ({ service }: { service: ServiceProps }) => {
                 >
                     <CarouselContent className='px-6'>
                         {dates.map((date) => (
-                            <CarouselItem 
-                                onClick={() => setSelectedDate(date)} 
-                                key={date.toDateString()} 
+                            <CarouselItem
+                                onClick={() => setSelectedDate(date)}
+                                key={date.toDateString()}
                                 className="basis-1/3 hover:cursor-pointer"
                             >
                                 <Card className={cn(
                                     "transition-colors duration-200",
-                                    selectedDate?.toDateString() === date.toDateString() 
+                                    selectedDate?.toDateString() === date.toDateString()
                                         ? "bg-primary text-primary-foreground"
                                         : "hover:bg-secondary"
                                 )}>
@@ -110,9 +109,9 @@ export const BookService = ({ service }: { service: ServiceProps }) => {
                         <h3 className="font-semibold text-lg">Available Times</h3>
                         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4'>
                             {service.availableSlots
-                                .filter(slot => 
-                                    format(new Date(slot.startTime), 'yyyy-MM-dd') === 
-                                    format(selectedDate, 'yyyy-MM-dd') && 
+                                .filter(slot =>
+                                    format(new Date(slot.startTime), 'yyyy-MM-dd') ===
+                                    format(selectedDate, 'yyyy-MM-dd') &&
                                     !slot.isBooked
                                 )
                                 .map((slot) => (
@@ -123,7 +122,7 @@ export const BookService = ({ service }: { service: ServiceProps }) => {
                                             "h-auto py-4 px-6",
                                             isBooking && selectedSlot === slot.id && "opacity-50 cursor-not-allowed"
                                         )}
-                                        onClick={() => handleBooking(slot.id)}
+                                        onClick={() => setSelectedSlot(slot.id)}
                                         disabled={isBooking}
                                     >
                                         <div className="flex flex-col items-center gap-2">
@@ -135,6 +134,17 @@ export const BookService = ({ service }: { service: ServiceProps }) => {
                                     </Button>
                                 ))}
                         </div>
+                        {selectedSlot &&
+                            <Button disabled={isBooking} onClick={() => handleBooking(selectedSlot)}>
+                                {isBooking ? (
+                                    <>
+                                        <LoaderCircle className='animate-spin'/> Booking
+                                    </>
+                                ) : (
+                                    "Book Now"
+                                )}
+                            </Button>
+                        }
                     </div>
                 )}
             </CardContent>
