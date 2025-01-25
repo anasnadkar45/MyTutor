@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Crown, Globe, HomeIcon, Settings, UserCircle } from 'lucide-react'
+import { Crown, Globe, HomeIcon, PhoneCallIcon, Settings, UserCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Logo from '../../../../public/logo.svg'
@@ -14,7 +14,7 @@ const sidebarLinks = [
         category: "GENERAL",
         links: [
             { id: 0, name: "Dashboard", href: `/learner/dashboard`, icon: HomeIcon },
-            { id: 1, name: "People", href: `/learner/people`, icon: UserCircle },
+            { id: 1, name: "Bookings", href: `/learner/bookings`, icon: PhoneCallIcon },
         ],
     },
     {

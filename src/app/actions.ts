@@ -3,8 +3,8 @@ import { requireUser } from "./utils/hooks";
 import { z } from "zod";
 import { AccountType, ServiceType } from "@prisma/client";
 import prisma from "./utils/db";
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { StreamClient } from "@stream-io/node-sdk";
 
 export type State = {
     status: "error" | "success" | undefined;
@@ -12,6 +12,21 @@ export type State = {
         [key: string]: string[];
     };
     message?: string | null;
+};
+
+export const streamTokenProvider = async () => {
+    const user = await getUserData();
+
+    if (!user) throw new Error("User not authenticated");
+
+    const streamClient = new StreamClient(
+        process.env.NEXT_PUBLIC_STREAM_API_KEY!,
+        process.env.STREAM_SECRET_KEY!
+    );
+
+    const token = streamClient.generateUserToken({ user_id: user.id });
+
+    return token;
 };
 
 const onboardingSchema = z.object({
@@ -268,6 +283,7 @@ export async function createTimeSlot(prevState: any, formData: FormData) {
 const bookingSchema = z.object({
     slotId: z.string().min(1, "Time slot is required"),
     serviceId: z.string().min(1, "Service is required"),
+    bookingType: z.string().min(1, "Booking type is required")
 })
 
 export async function bookTimeSlot(prevState: any, formData: FormData) {
@@ -282,6 +298,7 @@ export async function bookTimeSlot(prevState: any, formData: FormData) {
     const validateFields = bookingSchema.safeParse({
         slotId: formData.get("slotId"),
         serviceId: formData.get("serviceId"),
+        bookingType: formData.get("bookingType"),
     })
 
     if (!validateFields.success) {
@@ -299,6 +316,7 @@ export async function bookTimeSlot(prevState: any, formData: FormData) {
                 serviceId: validateFields.data.serviceId,
                 availableSlotId: validateFields.data.slotId,
                 userId: user.id,
+                bookingType: validateFields.data.bookingType as ServiceType
             }
         })
 

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Calendar, Crown, Globe, HomeIcon, Settings, UserCircle } from 'lucide-react'
+import { Calendar, Crown, Globe, HomeIcon, PhoneCallIcon, Settings, UserCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Logo from '../../../../public/logo.svg'
@@ -15,7 +15,7 @@ const sidebarLinks = [
         category: "GENERAL",
         links: [
             { id: 0, name: "Dashboard", href: `/tutor/dashboard`, icon: HomeIcon },
-            { id: 1, name: "Schedule", href: `/tutor/schedule`, icon: Calendar },
+            { id: 1, name: "Bookings", href: `/tutor/bookings`, icon: PhoneCallIcon },
         ],
     },
     {

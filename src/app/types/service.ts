@@ -42,6 +42,7 @@ export interface UserType {
 export interface BookingType {
     id: string
     status: BookingStatus
+    bookingType: ServiceType
     createdAt: Date
     updatedAt: Date
     userId?: string

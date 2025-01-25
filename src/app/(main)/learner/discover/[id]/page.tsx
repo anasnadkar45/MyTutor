@@ -39,7 +39,7 @@ const page = async ({ params }: { params: { id: string } }) => {
                 <Button>Book Now</Button>
             </Topbar>
             <Wrapper className='grid md:grid-cols-7 gap-6'>
-                <Card className='md:col-span-4'>
+                <Card className='md:col-span-4 h-fit'>
                     <CardHeader className='bg-[#f0b026] rounded-t-lg'>
                         <CardTitle className='flex justify-between items-center mb-4'>
                             <h1 className='text-muted'>{service?.User?.name}</h1>
