@@ -55,7 +55,7 @@ export const MyTutorVideo = ({ booking, session }: { booking: BookingType, sessi
                     <StreamTheme>
                         <SpeakerLayout />
                         <CallControls onLeave={() => {
-                            router.push("/learner/bookings");
+                            router.push("/tutor/bookings");
                         }} />
                         <CallParticipantsList onClose={() => undefined} />
                     </StreamTheme>

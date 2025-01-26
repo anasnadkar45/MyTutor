@@ -32,10 +32,7 @@ export function Sidebar() {
         <div className="hidden md:flex flex-col h-[calc(100vh-1.5rem)] w-[260px] bg-card border-2 rounded-lg">
             <div className="flex items-center border-b h-16 gap-3 p-4">
                 <Image src={Logo} alt="Studify" className="size-12" />
-                <div>
-                    <h1 className="font-semibold">Studify</h1>
-                    <p className="text-sm text-zinc-400">Study Planner</p>
-                </div>
+                <h1 className="font-bold text-2xl">MyTutor</h1>
                 <ModeToggle />
             </div>
 

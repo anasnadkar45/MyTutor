@@ -7,15 +7,9 @@ import React from 'react'
 const getServices = async () => {
     const data = await prisma.service.findMany({
         include:{
-            User:{
-
-            },
-            availableSlots:{
-
-            },
-            Booking:{
-                
-            }
+            User:true,
+            availableSlots:true,
+            Booking:true
         }
     })
     return data

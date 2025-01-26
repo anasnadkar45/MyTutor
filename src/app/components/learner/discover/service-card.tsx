@@ -3,16 +3,25 @@ import { Calendar, Star } from "lucide-react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { ServiceProps } from "@/app/types/service"
 import Link from "next/link"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import Image from "next/image"
 
 
-export function ServiceCard({ service, parentRoute }: { service: ServiceProps,parentRoute:string }) {
+export function ServiceCard({ service, parentRoute }: { service: ServiceProps, parentRoute: string }) {
     return (
         <Link href={`/${parentRoute}/${service.id}`}>
             <Card className="w-full max-w-md bg-card border-2 hover:shadow-lg hover:bg-secondary/50 transition-shadow">
                 <CardHeader className="space-y-1 pb-2">
-                    <div className="flex items-center gap-1">
-                        <Star className="w-5 h-5 fill-primary text-primary" />
-                        <span className="font-medium">5</span>
+                    <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-1">
+                            <Star className="w-5 h-5 fill-primary text-primary" />
+                            <span className="font-medium">5</span>
+                        </div>
+                        {/* <Avatar>
+                            <AvatarImage src={service.user?.image} />
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar> */}
+                        <Image src={service.User?.image} alt="" width={50} height={50}/>
                     </div>
                     <h3 className="text-xl font-semibold tracking-tight">{service.title}</h3>
                     <p className="text-muted-foreground">{service.description}</p>

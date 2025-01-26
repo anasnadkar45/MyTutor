@@ -12,7 +12,7 @@ export interface ServiceProps {
     updatedAt: Date
     bookings: BookingType[]
     userId?: string
-    user?: UserType
+    User?: UserType
 }
 
 export interface AvailableSlotType {
@@ -48,7 +48,8 @@ export interface BookingType {
     userId?: string
     user?: UserType
     serviceId?: string
-    service?: ServiceProps
+    Service?: ServiceProps
     availableSlotId?: string
-    availableSlot?: AvailableSlotType
+    AvailableSlot?: AvailableSlotType
+
 }

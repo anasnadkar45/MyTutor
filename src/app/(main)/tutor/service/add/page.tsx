@@ -6,6 +6,7 @@ import { Wrapper } from '@/components/global/Wrapper'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 import { ServiceType } from '@prisma/client'
 import { ArrowLeft, Mail, Phone } from 'lucide-react'
@@ -99,7 +100,7 @@ const page = () => {
                         <Label htmlFor="description" className="text-left text-lg font-bold">
                             Description
                         </Label>
-                        <Input
+                        <Textarea
                             id="description"
                             name="description"
                             placeholder="I will teach the basic foundation of English language"

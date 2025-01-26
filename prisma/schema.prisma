@@ -124,7 +124,7 @@ model AvailableSlot {
 
 model Booking {
   id              String         @id @unique @default(cuid())
-  status          BookingStatus  @default(Pending)
+  status          BookingStatus  @default(Upcomming)
   bookingType     ServiceType
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
@@ -137,10 +137,8 @@ model Booking {
 }
 
 enum BookingStatus {
-  Pending
-  Confirmed
+  Upcomming
   Completed
-  Canceled
 }
 
 enum AccountType {
