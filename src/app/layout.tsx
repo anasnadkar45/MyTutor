@@ -27,6 +27,7 @@ export const metadata: Metadata = {
 const titillium_Web = Titillium_Web({ weight: "400", subsets: ["latin"] });
 export const amaranth = Amaranth({ weight: "400", subsets: ["latin"] });
 
+export const dynamic = 'force-dynamic';
 export default function RootLayout({
   children,
 }: Readonly<{
