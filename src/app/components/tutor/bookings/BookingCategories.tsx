@@ -23,7 +23,7 @@ export const BookingCategories: React.FC<BookingCategoriesProps> = ({ bookings }
 
   const getBookingCategory = (booking: BookingType): string => {
     const now = new Date()
-    const startTime = booking.AvailableSlot?.startTime
+    const startTime = (booking.AvailableSlot?.startTime)
     const endTime = booking.AvailableSlot?.endTime
 
     if (isBefore(now, startTime as any)) {

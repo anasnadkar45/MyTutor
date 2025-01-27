@@ -5,9 +5,26 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { CalendarIcon, ClockIcon } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import React, { useActionState, useEffect } from 'react'
+import { isBefore, isAfter } from 'date-fns'
+import { cancleBooking } from '@/app/actions'
+import { toast } from 'sonner'
+import { SubmitButton } from '@/components/global/SubmitButton'
 
 export const BookingCard = ({ booking }: { booking: BookingType }) => {
+    const initialState = { message: "", status: undefined, errors: {} }
+    const [state, formAction] = useActionState(cancleBooking, initialState);
+    console.log(booking)
+    useEffect(() => {
+        console.log("State updated:", state)
+        if (state?.status === "success") {
+            toast.success(state.message)
+            // return redirect('/tutor/service')
+        } else if (state?.status === "error") {
+            toast.error(state.message)
+            console.log(state.errors)
+        }
+    }, [state]);
     const formatDate = (date: Date) => {
         return new Date(date).toLocaleDateString("en-US", {
             year: "numeric",
@@ -22,13 +39,29 @@ export const BookingCard = ({ booking }: { booking: BookingType }) => {
             minute: "2-digit",
         })
     }
-    console.log(booking)
+
+    const getBookingStatus = (booking: BookingType): string => {
+        const now = new Date()
+        const startTime = new Date(booking.AvailableSlot?.startTime as any)
+        const endTime = new Date(booking.AvailableSlot?.endTime as any)
+
+        if (isBefore(now, startTime)) {
+            return "Upcoming"
+        } else if (isAfter(now, endTime)) {
+            return "Completed"
+        } else {
+            return "Live"
+        }
+    }
+
     return (
         <Card className="w-full max-w-md">
             <CardHeader>
                 <CardTitle className="flex justify-between items-center">
                     <h2 className="text-xl font-bold">{booking.Service?.title || "Untitled Service"}</h2>
-                    <Badge variant={booking.status === "Confirmed" ? "default" : "secondary"}>{booking.status}</Badge>
+                    <Badge variant={getBookingStatus(booking) === "Live" ? "default" : "secondary"}>
+                        {getBookingStatus(booking)}
+                    </Badge>
                 </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -40,7 +73,7 @@ export const BookingCard = ({ booking }: { booking: BookingType }) => {
                     {booking.Service && (
                         <div>
                             <p className="text-sm text-muted-foreground">Price</p>
-                            <p className="font-medium">${booking.Service.price.toFixed(2)}</p>
+                            <p className="font-medium">₹{booking.Service.price.toFixed(2)}</p>
                         </div>
                     )}
                 </div>
@@ -60,8 +93,13 @@ export const BookingCard = ({ booking }: { booking: BookingType }) => {
                 )}
             </CardContent>
             <CardFooter className="flex justify-between">
-                <Button variant="outline">Cancel</Button>
-                <Button asChild>
+                <form action={formAction}>
+                    <input type="hidden" name='bookingId' value={booking.id}/>
+                    <input type="hidden" name='serviceId' value={booking.serviceId}/>
+                    <input type="hidden" name='slotId' value={booking.availableSlotId}/>
+                    <SubmitButton text='Cancle' variant={'outline'}/>
+                </form>
+                <Button asChild disabled={getBookingStatus(booking) === "Completed"}>
                     <Link href={`/tutor/bookings/${booking.id}`}>Join Now</Link>
                 </Button>
             </CardFooter>

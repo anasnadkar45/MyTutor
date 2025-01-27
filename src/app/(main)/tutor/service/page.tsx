@@ -1,5 +1,4 @@
 import { getUserData } from '@/app/actions'
-import { ServiceCard } from '@/app/components/learner/discover/service-card'
 import prisma from '@/app/utils/db'
 import { Topbar } from '@/components/global/Topbar'
 import { Wrapper } from '@/components/global/Wrapper'
@@ -8,6 +7,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import EmptyScreen from '../../../../../public/Service.svg'
+import { ServiceCard } from '@/app/components/tutor/service/ServiceCard'
 
 const getServices = async (userId: string) => {
   const data = await prisma.service.findMany({
@@ -43,7 +43,7 @@ const MyServices = async () => {
       <Wrapper>
         <div className='grid md:grid-cols-3 gap-2'>
           {services.map((service) => (
-            <ServiceCard key={service.id} service={service as any} parentRoute={"tutor/service"} />
+            <ServiceCard key={service.id} service={service as any}/>
           ))}
         </div>
         {services.length === 0 && (

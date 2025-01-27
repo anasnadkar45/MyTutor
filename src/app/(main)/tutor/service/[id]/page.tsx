@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
+import { EditService } from './edit/EditService'
+import { DeleteService } from './delete/DeleteService'
 
 const getServiceData = async (serviceId: string) => {
     const data = await prisma.service.findUnique({
@@ -32,18 +34,14 @@ const page = async ({ params }: { params: { id: string } }) => {
                     <h1>{service?.title}</h1>
                 </div>
                 <div className='flex gap-2 items-center'>
-                    <Link href={'/tutor/service'} className='hover:text-foreground'>
-                        <Button>Edit</Button>
-                    </Link>
+                    <DeleteService service={service as any}/>
                     <Link href={`/tutor/service/${service?.id}/schedule`}>
                         <Button>Create Schedule</Button>
                     </Link>
                 </div>
             </Topbar>
             <Wrapper>
-                <div>
-                    
-                </div>
+                <EditService service={service as any} />
             </Wrapper>
         </div>
     )

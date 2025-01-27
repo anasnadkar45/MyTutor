@@ -203,6 +203,139 @@ export async function createService(prevState: any, formData: FormData) {
     }
 }
 
+export async function updateService(prevState: any, formData: FormData) {
+    const user = await getUserData();
+    if (!user?.id) {
+        return {
+            status: "error",
+            message: "User not found. Please log in to add a new project."
+        };
+    }
+
+    const validateFields = serviceSchema.safeParse({
+        serviceType: formData.get('serviceType'),
+        title: formData.get('title'),
+        description: formData.get('description'),
+        price: Number(formData.get('price')),
+        duration: Number(formData.get('duration')),
+    });
+
+    if (!validateFields.success) {
+        return {
+            status: "error",
+            message: "Validation failed.",
+            errors: validateFields.error.flatten().fieldErrors,
+        };
+    }
+
+    const serviceId = formData.get('serviceId') as string;
+
+    if (user.accountName === "Tutor") {
+        try {
+            const data = await prisma.service.update({
+                where: {
+                    id: serviceId,
+                    userId: user.id
+                },
+                data: {
+                    serviceType: validateFields.data.serviceType as ServiceType,
+                    title: validateFields.data.title,
+                    description: validateFields.data.description,
+                    price: validateFields.data.price,
+                    duration: validateFields.data.duration,
+                    userId: user.id
+                }
+            })
+
+            if (data) {
+                revalidatePath(`/tutor/service/${serviceId}`)
+                return {
+                    status: "success",
+                    message: "Your service have been updated successfully."
+                };
+            }
+
+            const state: State = {
+                status: "success",
+                message: "Your service have been updated successfully.",
+            };
+            return state;
+
+        } catch (e) {
+            return {
+                status: "error",
+                message: "An error occurred while updating the service. Please try again later."
+            };
+        }
+    }
+}
+
+export async function deleteService(prevState: any, formData: FormData) {
+    const user = await getUserData()
+    if (!user?.id) {
+        return {
+            status: "error",
+            message: "User not found. Please log in to delete a service.",
+        }
+    }
+
+    const serviceId = formData.get("serviceId") as string
+    if (!serviceId) {
+        return {
+            status: "error",
+            message: "Service ID is missing.",
+        }
+    }
+
+    if (user.accountName === "Tutor") {
+        try {
+            await prisma.booking.deleteMany({
+                where: {
+                    serviceId: serviceId,
+                },
+            })
+
+            await prisma.availableSlot.deleteMany({
+                where: {
+                    serviceId: serviceId,
+                },
+            })
+
+            const deletedService = await prisma.service.delete({
+                where: {
+                    id: serviceId,
+                    userId: user.id,
+                },
+            })
+
+            if (deletedService) {
+                revalidatePath(`/tutor/service/`)
+                return {
+                    status: "success",
+                    message: "Your service has been deleted successfully.",
+                }
+            }
+
+            const state: State = {
+                status: "success",
+                message: "Your service have been deleted successfully.",
+            };
+            return state;
+        } catch (e) {
+            console.error("Error deleting service:", e)
+            return {
+                status: "error",
+                message: "An error occurred while deleting the service. Please try again later.",
+            }
+        }
+    } else {
+        return {
+            status: "error",
+            message: "You don't have permission to delete services.",
+        }
+    }
+}
+
 // ----------------------------------------------------------------
 
 const timeSlotSchema = z.object({
@@ -340,8 +473,74 @@ export async function bookTimeSlot(prevState: any, formData: FormData) {
     } catch (error) {
         return {
             status: "error",
-            message: error instanceof Error ? error.message : "Failed to book the service. Please try again.",
+            message: "Failed to book the service. Please try again.",
         }
     }
 }
 
+const cancleBookingSchema = z.object({
+    slotId: z.string().min(1, "Time slot is required"),
+    serviceId: z.string().min(1, "Service is required"),
+})
+export async function cancleBooking(prevState: any, formData: FormData) {
+    const user = await getUserData()
+    if (!user?.id) {
+        return {
+            status: "error",
+            message: "Please log in to book a service.",
+        }
+    }
+
+    const validateFields = cancleBookingSchema.safeParse({
+        slotId: formData.get("slotId"),
+        serviceId: formData.get("serviceId"),
+    })
+
+    if (!validateFields.success) {
+        return {
+            status: "error",
+            message: "Invalid booking data.",
+            errors: validateFields.error.flatten().fieldErrors,
+        }
+    }
+
+    const bookingId = formData.get("bookingId") as string;
+    try {
+
+        const booking = await prisma.booking.delete({
+            where: {
+                id: bookingId,
+                serviceId: validateFields.data.serviceId,
+                availableSlotId: validateFields.data.slotId,
+            }
+        })
+
+        const updateStatus = await prisma.availableSlot.update({
+            where: {
+                id: validateFields.data.slotId,
+            },
+            data: {
+                isBooked: false
+            }
+        })
+
+        if (booking) {
+            revalidatePath(`/learner/bookings`)
+            revalidatePath(`/tutor/bookings`)
+            return {
+                status: "success",
+                message: "Booking cancled successfully! Visit again.",
+            }
+        }
+        const state: State = {
+            status: "success",
+            message: "Booking cancled successfully! Visit again.",
+        };
+        return state;
+    } catch (error) {
+        return {
+            status: "error",
+            message: "Failed to cancle the booking service. Please try again.",
+        }
+    }
+}

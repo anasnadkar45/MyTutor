@@ -7,9 +7,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Image from "next/image"
 
 
-export function ServiceCard({ service, parentRoute }: { service: ServiceProps, parentRoute: string }) {
+export function ServiceCard({ service }: { service: ServiceProps}) {
     return (
-        <Link href={`/${parentRoute}/${service.id}`}>
+        <Link href={`/tutor/service/${service.id}`}>
             <Card className="w-full max-w-md bg-card border-2 hover:shadow-lg hover:bg-secondary/50 transition-shadow">
                 <CardHeader className="space-y-1 pb-2">
                     <div className="flex justify-between items-center">
