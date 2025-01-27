@@ -7,7 +7,6 @@ import { SubmitButton } from "@/components/global/SubmitButton"
 import type { ServiceProps } from "@/app/types/service"
 
 export const DeleteService = ({ service }: { service: ServiceProps }) => {
-  const router = useRouter()
   const initialState = { message: "", status: undefined, errors: {} }
   const [state, formAction] = useActionState(deleteService, initialState)
 

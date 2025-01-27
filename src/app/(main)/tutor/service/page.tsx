@@ -15,15 +15,12 @@ const getServices = async (userId: string) => {
       userId: userId
     },
     include: {
-      User: {
-
-      },
-      availableSlots: {
-
-      },
-      Booking: {
-
-      }
+      User: true,
+      availableSlots: true,
+      Booking: true,
+    },
+    orderBy:{
+      createdAt:"desc"
     }
   })
   return data

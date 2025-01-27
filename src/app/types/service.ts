@@ -13,6 +13,7 @@ export interface ServiceProps {
     bookings: BookingType[]
     userId?: string
     User?: UserType
+    _count?: number
 }
 
 export interface AvailableSlotType {
