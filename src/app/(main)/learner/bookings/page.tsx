@@ -11,6 +11,7 @@ import EmptyScreen from '../../../../../public/EmptyScreen.svg'
 import Calendar from '../../../../../public/Calendar.avif'
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { BookingType } from "@/app/types/service"
+import { unstable_noStore } from "next/cache"
 
 const getBookings = async (userId: string) => {
   const data = await prisma.booking.findMany({
@@ -29,6 +30,7 @@ const getBookings = async (userId: string) => {
 }
 
 const Page = async () => {
+  unstable_noStore()
   const user = await getUserData()
   const bookings = await getBookings(user?.id as string)
 

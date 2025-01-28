@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Titillium_Web, Amaranth } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/global/theme-provider";
+import NextTopLoader from 'nextjs-toploader';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,18 +39,19 @@ export default function RootLayout({
       <body
         className={cn(titillium_Web.className)}
       >
+        <NextSSRPlugin
+          routerConfig={extractRouterConfig(ourFileRouter)}
+        />
+        <NextTopLoader />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <NextSSRPlugin
-            routerConfig={extractRouterConfig(ourFileRouter)}
-          />
           {children}
-          <Toaster />
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );

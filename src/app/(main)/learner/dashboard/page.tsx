@@ -6,6 +6,7 @@ import prisma from "@/app/utils/db"
 import { DashboardStats } from "@/app/components/learner/dashboard/DashboardStats"
 import { UpcomingBookings } from "@/app/components/learner/dashboard/UpcomingBookings"
 import { BookedServices } from "@/app/components/learner/dashboard/BookedServices"
+import { unstable_noStore } from "next/cache"
 
 const getBookings = async (userId: string) => {
   return await prisma.booking.findMany({
@@ -67,6 +68,7 @@ const getDashboardStats = async (userId: string) => {
 }
 
 const LearnerDashboardPage = async () => {
+  unstable_noStore()
   const session = await requireUser()
   const bookings = await getBookings(session.user?.id as string)
   const bookedServices = await getBookedServices(session.user?.id as string)

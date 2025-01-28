@@ -8,7 +8,9 @@ import {
 import { auth, signIn } from "../utils/auth";
 import { redirect } from "next/navigation";
 import { GitHubAuthButton, GoogleAuthButton } from "@/components/global/SubmitButton";
+import { unstable_noStore } from "next/cache";
 export default async function Login() {
+  unstable_noStore()
   const session = await auth();
 
   if (session?.user) {

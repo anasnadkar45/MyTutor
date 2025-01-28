@@ -8,6 +8,7 @@ import { Topbar } from '@/components/global/Topbar';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Wrapper } from '@/components/global/Wrapper';
+import { unstable_noStore } from 'next/cache';
 
 const getBookingData = async (bookingId: string) => {
     const data = await prisma.booking.findUnique({
@@ -29,6 +30,7 @@ const getBookingData = async (bookingId: string) => {
     return data;
 }
 const page = async ({ params }: { params: { id: string } }) => {
+    unstable_noStore()
     const booking = await getBookingData(params.id)
     const session = await getUserData()
     return (

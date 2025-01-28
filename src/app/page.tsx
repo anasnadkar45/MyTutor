@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { requireUser } from "./utils/hooks";
 import prisma from "./utils/db";
+import { unstable_noStore } from "next/cache";
 
 const getUserData = async(userId: string) =>{
   const data = await prisma.user.findUnique({
@@ -11,6 +12,7 @@ const getUserData = async(userId: string) =>{
   return data
 }
 export default async function Home() {
+  unstable_noStore()
   const session = await requireUser()
   const userData = await getUserData(session.user?.id as string);
   if (userData?.id) {
