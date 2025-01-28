@@ -10,6 +10,7 @@ import React from "react"
 import EmptyScreen from '../../../../../public/EmptyScreen.svg'
 import Calendar from '../../../../../public/Calendar.avif'
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
+import { BookingType } from "@/app/types/service"
 
 const getBookings = async (userId: string) => {
   const data = await prisma.booking.findMany({
@@ -40,7 +41,7 @@ const Page = async () => {
         </Link>
       </Topbar>
       <Wrapper>
-        <BookingCategories bookings={bookings as any} />
+        <BookingCategories bookings={bookings as BookingType[]} />
         {bookings.length === 0 && (
           <div className='h-[73vh] flex flex-col justify-center items-center gap-4'>
             <Image src={EmptyScreen} alt='EmptyScreen' width={200} height={200} />

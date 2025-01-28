@@ -34,7 +34,7 @@ const page = async ({ params }: { params: { id: string } }) => {
                     <h1>{service?.title}</h1>
                 </div>
                 <div className='flex gap-2 items-center'>
-                    <DeleteService service={service as any}/>
+                    {/* <DeleteService service={service as any}/> */}
                     <Link href={`/tutor/service/${service?.id}/schedule`}>
                         <Button>Create Schedule</Button>
                     </Link>

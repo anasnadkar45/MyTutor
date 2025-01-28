@@ -99,8 +99,8 @@ export const BookingCard = ({ booking }: { booking: BookingType }) => {
                     <input type="hidden" name='slotId' value={booking.availableSlotId} />
                     <SubmitButton text='Cancle' variant={'outline'} />
                 </form>
-                <Button asChild disabled={getBookingStatus(booking) === "Completed"}>
-                    <Link href={`/tutor/bookings/${booking.id}`}>Join Now</Link>
+                <Button asChild>
+                    <Link href={`/learner/bookings/${booking.id}`}>Join Now</Link>
                 </Button>
             </CardFooter>
         </Card>

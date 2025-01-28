@@ -271,7 +271,7 @@ export const Onboarding = () => {
         )}
       </div>
 
-      <div className="hidden bg-[#E8F8DC] mx-auto lg:flex lg:w-[45%]">{/* Add your illustration here */}</div>
+      <div className="hidden bg-[#c6ff9d] mx-auto lg:flex lg:w-[45%]">{/* Add your illustration here */}</div>
     </div>
   )
 }

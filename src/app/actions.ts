@@ -5,6 +5,11 @@ import { AccountType, ServiceType } from "@prisma/client";
 import prisma from "./utils/db";
 import { revalidatePath } from "next/cache";
 import { StreamClient } from "@stream-io/node-sdk";
+import { signOut } from "./utils/auth";
+
+export async function handleSignOut() {
+    await signOut()
+}
 
 export type State = {
     status: "error" | "success" | undefined;

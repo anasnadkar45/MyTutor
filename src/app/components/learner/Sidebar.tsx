@@ -8,6 +8,8 @@ import Image from 'next/image'
 import Logo from '../../../../public/logo.svg'
 import { ModeToggle } from '@/components/global/ModeToggle'
 import { Button } from '@/components/ui/button'
+import { signOut } from '@/app/utils/auth'
+import { handleSignOut } from '@/app/actions'
 
 const sidebarLinks = [
     {
@@ -69,16 +71,11 @@ export function Sidebar() {
                         <Crown className="mr-2 h-4 w-4" />
                         Upgrade Pro
                     </Button>
-                    <Button className='w-full' variant={'secondary'}>
-                        Logout
-                    </Button>
-                    {/* {userId && (
-                        <Button className='w-full'>
-                            <LogoutLink>
-                                Logout
-                            </LogoutLink>
+                    <form action={handleSignOut}>
+                        <Button type='submit' className='w-full' variant={'secondary'}>
+                            Logout
                         </Button>
-                    )} */}
+                    </form>
                 </div>
             </div>
         </div>

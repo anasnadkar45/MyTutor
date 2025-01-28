@@ -24,7 +24,7 @@ export function ServiceCard({ service, parentRoute }: { service: ServiceProps, p
                         <Image src={service.User?.image as string} alt="" width={50} height={50}/>
                     </div>
                     <h3 className="text-xl font-semibold tracking-tight">{service.title}</h3>
-                    <p className="text-muted-foreground">{service.description}</p>
+                    <p className="text-muted-foreground line-clamp-2">{service.description}</p>
                 </CardHeader>
                 <CardContent>
                     <div className="flex items-center justify-between mt-4">

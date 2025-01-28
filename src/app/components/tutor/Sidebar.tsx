@@ -9,6 +9,7 @@ import Logo from '../../../../public/logo.svg'
 import { ModeToggle } from '@/components/global/ModeToggle'
 import { Button } from '@/components/ui/button'
 import { FaServicestack } from 'react-icons/fa'
+import { handleSignOut } from '@/app/actions'
 
 const sidebarLinks = [
     {
@@ -70,16 +71,11 @@ export function Sidebar() {
                         <Crown className="mr-2 h-4 w-4" />
                         Upgrade Pro
                     </Button>
-                    <Button className='w-full bg-foreground'>
-                        Logout
-                    </Button>
-                    {/* {userId && (
-                        <Button className='w-full'>
-                            <LogoutLink>
-                                Logout
-                            </LogoutLink>
+                    <form action={handleSignOut}>
+                        <Button type='submit' className='w-full' variant={'secondary'}>
+                            Logout
                         </Button>
-                    )} */}
+                    </form>
                 </div>
             </div>
         </div>
