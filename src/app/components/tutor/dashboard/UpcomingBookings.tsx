@@ -15,11 +15,11 @@ export function UpcomingBookings({bookings}:{bookings:BookingType[]}) {
           {bookings.map((booking) => (
             <div key={booking.id} className="flex items-center space-x-4">
               <Avatar>
-                <AvatarImage src={`https://api.dicebear.com/6.x/initials/svg?seed=${booking.user?.name}`} />
-                <AvatarFallback>{booking.user?.name?.charAt(0)}</AvatarFallback>
+                <AvatarImage src={`https://api.dicebear.com/6.x/initials/svg?seed=${booking.User?.name}`} />
+                <AvatarFallback>{booking.User?.name?.charAt(0)}</AvatarFallback>
               </Avatar>
               <div className="flex-1 space-y-1">
-                <p className="text-sm font-medium leading-none">{booking.user?.name}</p>
+                <p className="text-sm font-medium leading-none">{booking.User?.name}</p>
                 <p className="text-sm text-muted-foreground">{booking.Service?.title}</p>
               </div>
               <div className="text-sm text-muted-foreground">

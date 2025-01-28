@@ -17,6 +17,7 @@ const getBookings = async (userId: string) => {
         include: {
           AvailableSlot: true,
           Service: true,
+          User:true,
         },
         orderBy: {
           createdAt: "desc",

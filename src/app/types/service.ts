@@ -49,7 +49,7 @@ export interface BookingType {
     createdAt: Date
     updatedAt: Date
     userId?: string
-    user?: UserType
+    User?: UserType
     serviceId?: string
     Service?: ServiceProps
     availableSlotId?: string
