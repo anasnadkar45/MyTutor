@@ -37,36 +37,34 @@ export default async function DiscoverPage({ searchParams }: { searchParams: { p
 
   return (
     <div className="min-h-screen bg-background">
-      <Topbar>
+      <Topbar className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Discover Services</h1>
+        {user && <TutorMatcher learnerId={user.id} />}
       </Topbar>
       <Wrapper>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {user && <TutorMatcher learnerId={user.id} />}
-          {services.length > 0 ? (
-            <div className="mt-8">
-              <h2 className="text-xl font-semibold mb-4">Available Services</h2>
-              <ServicesPagination
-                services={services as any}
-                totalCount={totalCount}
-                pageSize={pageSize}
-                currentPage={page}
-              />
-            </div>
-          ) : (
-            <div className="h-[50vh] flex flex-col justify-center items-center gap-4">
-              <Image
-                src={EmptyScreen || "/placeholder.svg"}
-                alt="EmptyScreen"
-                width={200}
-                height={200}
-                className="bg-white p-4 rounded-lg shadow-md"
-              />
-              <h2 className="text-xl font-semibold">No services available yet</h2>
-              <p className="text-muted-foreground">Check back later for new tutoring services!</p>
-            </div>
-          )}
-        </div>
+        {services.length > 0 ? (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Available Services</h2>
+            <ServicesPagination
+              services={services as any}
+              totalCount={totalCount}
+              pageSize={pageSize}
+              currentPage={page}
+            />
+          </div>
+        ) : (
+          <div className="h-[50vh] flex flex-col justify-center items-center gap-4">
+            <Image
+              src={EmptyScreen || "/placeholder.svg"}
+              alt="EmptyScreen"
+              width={200}
+              height={200}
+              className="bg-white p-4 rounded-lg shadow-md"
+            />
+            <h2 className="text-xl font-semibold">No services available yet</h2>
+            <p className="text-muted-foreground">Check back later for new tutoring services!</p>
+          </div>
+        )}
       </Wrapper>
     </div>
   )
