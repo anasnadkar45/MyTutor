@@ -1,12 +1,12 @@
+import { getUserData } from "@/app/actions"
 import prisma from "@/app/utils/db"
 import { Topbar } from "@/components/global/Topbar"
 import { Wrapper } from "@/components/global/Wrapper"
-import { Button } from "@/components/ui/button"
 import Image from "next/image"
-import Link from "next/link"
 import React from "react"
 import EmptyScreen from "../../../../../public/Service.svg"
 import { ServicesPagination } from "@/app/components/learner/discover/ServicesPagination"
+import { TutorMatcher } from "@/app/components/learner/discover/TutorMatcher"
 
 export const getServices = async (page: number, pageSize: number) => {
   const skip = (page - 1) * pageSize
@@ -33,30 +33,40 @@ export default async function DiscoverPage({ searchParams }: { searchParams: { p
   const page = Number(searchParams.page) || 1
   const pageSize = 9
   const { services, totalCount } = await getServices(page, pageSize)
+  const user = await getUserData()
 
   return (
-    <div>
+    <div className="min-h-screen bg-background">
       <Topbar>
-        <h1>Discover Services</h1>
+        <h1 className="text-2xl font-bold">Discover Services</h1>
       </Topbar>
       <Wrapper>
-        {services.length > 0 ? (
-          <ServicesPagination services={services as any} totalCount={totalCount} pageSize={pageSize} currentPage={page} />
-        ) : (
-          <div className="h-[83vh] flex flex-col justify-center items-center gap-4">
-            <Image
-              src={EmptyScreen || "/placeholder.svg"}
-              alt="EmptyScreen"
-              width={200}
-              height={200}
-              className="bg-white p-4 rounded-lg"
-            />
-            <h1>Guide your students right now, come on!</h1>
-            <Link href={"/tutor/service/add"}>
-              <Button>Try Here</Button>
-            </Link>
-          </div>
-        )}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {user && <TutorMatcher learnerId={user.id} />}
+          {services.length > 0 ? (
+            <div className="mt-8">
+              <h2 className="text-xl font-semibold mb-4">Available Services</h2>
+              <ServicesPagination
+                services={services as any}
+                totalCount={totalCount}
+                pageSize={pageSize}
+                currentPage={page}
+              />
+            </div>
+          ) : (
+            <div className="h-[50vh] flex flex-col justify-center items-center gap-4">
+              <Image
+                src={EmptyScreen || "/placeholder.svg"}
+                alt="EmptyScreen"
+                width={200}
+                height={200}
+                className="bg-white p-4 rounded-lg shadow-md"
+              />
+              <h2 className="text-xl font-semibold">No services available yet</h2>
+              <p className="text-muted-foreground">Check back later for new tutoring services!</p>
+            </div>
+          )}
+        </div>
       </Wrapper>
     </div>
   )

@@ -7,6 +7,16 @@ import { revalidatePath } from "next/cache";
 import { StreamClient } from "@stream-io/node-sdk";
 import { signOut } from "./utils/auth";
 
+export async function getUserData() {
+    const session = await requireUser();
+    const data = await prisma.user.findUnique({
+        where: {
+            id: session.user?.id
+        }
+    })
+    return data
+}
+
 export async function handleSignOut() {
     await signOut()
 }
@@ -121,15 +131,7 @@ export async function onboardUser(prevState: any, formData: FormData) {
 
 // ----------------------------------------------------------------
 
-export async function getUserData() {
-    const session = await requireUser();
-    const data = await prisma.user.findUnique({
-        where: {
-            id: session.user?.id
-        }
-    })
-    return data
-}
+
 
 // ----------------------------------------------------------------
 const serviceSchema = z.object({

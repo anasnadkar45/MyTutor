@@ -10,18 +10,18 @@ import Image from "next/image"
 export function ServiceCard({ service }: { service: ServiceProps}) {
     return (
         <Link href={`/tutor/service/${service.id}`}>
-            <Card className="w-full max-w-md bg-card border-2 hover:shadow-lg hover:bg-secondary/50 transition-shadow">
+            <Card className="w-full max-w-md bg-card border-2 min-h-[230px] flex flex-col justify-between hover:shadow-lg hover:bg-secondary/50 transition-shadow">
                 <CardHeader className="space-y-1 pb-2">
                     <div className="flex justify-between items-center">
                         <div className="flex items-center gap-1">
                             <Star className="w-5 h-5 fill-primary text-primary" />
                             <span className="font-medium">5</span>
                         </div>
-                        {/* <Avatar>
-                            <AvatarImage src={service.user?.image} />
+                        <Avatar>
+                            <AvatarImage src={service.User?.image} />
                             <AvatarFallback>CN</AvatarFallback>
-                        </Avatar> */}
-                        <Image src={service.User?.image as string} alt="" width={50} height={50}/>
+                        </Avatar>
+                        
                     </div>
                     <h3 className="text-xl font-semibold tracking-tight">{service.title}</h3>
                     <p className="text-muted-foreground line-clamp-2">{service.description}</p>

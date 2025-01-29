@@ -69,7 +69,7 @@ export const BookingCard = ({ booking }: { booking: BookingType }) => {
         {booking.User && (
           <div className="flex items-center space-x-4 p-4 bg-secondary rounded-lg">
             <Avatar>
-              <AvatarImage src={booking.User.image || ""} />
+              <AvatarImage src={booking.User.image as string || ""} />
               <AvatarFallback>
                 <UserCircle className="h-6 w-6" />
               </AvatarFallback>
